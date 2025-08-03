@@ -4,17 +4,10 @@ This directory contains the pre-trained model weights for the Cognitive-Aim Dept
 
 ## Download Pre-trained Model
 
-The pre-trained model file `cognitive_aim_model.pth` (568MB) is available from multiple sources:
+The pre-trained model file `cognitive_aim_model.pth` (568MB) is available from:
 
-### Option 1: Baidu Netdisk (百度网盘)
-**Link:** https://pan.baidu.com/s/1HyhNe58adaVp5OGpljheiQ?pwd=zcgc  
-**Extract Code:** `zcgc`
-
-### Option 2: Google Drive (International Users)
-**Link:** [Coming Soon - Please use Baidu Netdisk for now]
-
-### Option 3: Hugging Face Hub
-**Link:** [Coming Soon - Please use Baidu Netdisk for now]
+### Hugging Face Hub
+**Link:** [Download cognitive_aim_model.pth](https://huggingface.co/yenjane123/cognitive_aim1.0/tree/main)
 
 ## Installation
 
