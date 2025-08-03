@@ -28,9 +28,9 @@ def create_nine_grid_layout(demo_results_dir: str, output_path: str):
         ['bottom-left', 'bottom', 'bottom-right']
     ]
     
-    # 创建图形
-    fig = plt.figure(figsize=(15, 15))
-    gs = GridSpec(3, 3, figure=fig, hspace=0.3, wspace=0.2)
+    # 创建图形 - 增大尺寸，减小间距
+    fig = plt.figure(figsize=(18, 18))
+    gs = GridSpec(3, 3, figure=fig, hspace=0.15, wspace=0.15)
     
     # 设置整体标题
     fig.suptitle('Cognitive-Aim: Spatial Attention Control Demonstration', 
