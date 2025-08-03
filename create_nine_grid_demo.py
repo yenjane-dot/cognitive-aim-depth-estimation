@@ -2,6 +2,7 @@
 """
 创建九宫格空间引导效果展示图
 使用demo.py生成的9个方向的推理结果进行合成
+采用3行布局，每行3个长方形图像
 """
 
 import os
@@ -14,27 +15,27 @@ import argparse
 
 def create_nine_grid_layout(demo_results_dir: str, output_path: str):
     """
-    创建3x3九宫格布局的空间引导效果图
+    创建3行x3列布局的空间引导效果图
     
     Args:
         demo_results_dir: demo_results目录路径
         output_path: 输出图像路径
     """
     
-    # 九个方向的顺序 (3x3布局)
+    # 九个方向的顺序 (3行x3列布局)
     directions = [
         ['top-left', 'top', 'top-right'],
         ['left', 'center', 'right'], 
         ['bottom-left', 'bottom', 'bottom-right']
     ]
     
-    # 创建图形 - 增大尺寸，减小间距
-    fig = plt.figure(figsize=(18, 18))
-    gs = GridSpec(3, 3, figure=fig, hspace=0.15, wspace=0.15)
+    # 创建图形 - 适应长方形图像的比例
+    fig = plt.figure(figsize=(20, 12))
+    gs = GridSpec(3, 3, figure=fig, hspace=0.01, wspace=0.05)
     
     # 设置整体标题
     fig.suptitle('Cognitive-Aim: Spatial Attention Control Demonstration', 
-                 fontsize=20, fontweight='bold', y=0.95)
+                 fontsize=18, fontweight='bold', y=0.95)
     
     for row in range(3):
         for col in range(3):
@@ -57,7 +58,7 @@ def create_nine_grid_layout(demo_results_dir: str, output_path: str):
             # 显示预测图像
             ax.imshow(pred_img)
             ax.set_title(f'{direction.replace("-", "-").title()} Focus', 
-                        fontsize=14, fontweight='bold', pad=10)
+                        fontsize=12, fontweight='bold', pad=8)
             ax.axis('off')
             
             # 添加边框突出显示
@@ -77,7 +78,7 @@ def create_nine_grid_layout(demo_results_dir: str, output_path: str):
     # 添加说明文字
     fig.text(0.5, 0.02, 
              'The model supports precise spatial guidance for different focus regions',
-             ha='center', fontsize=12, style='italic')
+             ha='center', fontsize=11, style='italic')
     
     # 保存图像
     plt.savefig(output_path, dpi=300, bbox_inches='tight', 
