@@ -1,0 +1,136 @@
+advanced:
+  attention_visualization:
+    enable: false
+    save_frequency: 50
+  dynamic_sampling:
+    difficulty_threshold: 0.7
+    enable: false
+  exploration_history:
+    analysis_frequency: 100
+    enable: true
+    save_statistics: true
+checkpoint:
+  auto_resume: true
+  keep_last_n: 3
+  save_dir: checkpoints
+  save_frequency: 5
+curiosity:
+  enable: true
+  hierarchical:
+    adaptive_weighting: true
+    enable: true
+    level_weights:
+    - 0.4
+    - 0.4
+    - 0.2
+  lambda: 0.1
+  loss_type: robust
+  statistics:
+    enable_logging: true
+    exploration_analysis: true
+    log_frequency: 100
+    save_attention_maps: true
+  uncertainty_weight: 0.1
+  warmup_epochs: 1
+dataset:
+  augmentation: true
+  image_size: 224
+  path: dataset
+description: "\u5B8C\u6574\u8BA4\u77E5\u6A21\u578B\u8BAD\u7EC3\uFF08\u56DB\u5C42\u8BA4\
+  \u77E5\u67B6\u6784 + EXIF\u7ECF\u9A8C + \u597D\u5947\u5FC3\u9A71\u52A8\uFF09"
+experiment:
+  name: full_cognition_enhanced
+  notes: "\u5B8C\u6574\u8BA4\u77E5\u6A21\u578B + \u589E\u5F3A\u597D\u5947\u5FC3\u673A\
+    \u5236"
+  tags:
+  - cognitive_aim
+  - enhanced_curiosity
+  - hierarchical
+  version: v1.0
+logging:
+  curiosity:
+    log_attention_weights: true
+    log_curiosity_stats: true
+    log_exploration_history: true
+    save_curiosity_heatmaps: true
+  log_dir: logs
+  num_save_images: 8
+  save_images: true
+  tensorboard: true
+model:
+  backbone: dinov2
+  backbone_size: base
+  cognitive_modules:
+  - ambient_stream
+  - iterative_focal_stream
+  - exif_prior_database
+  curiosity_guided_attention:
+    attention_dropout: 0.1
+    attention_heads: 8
+    enable: true
+  enable_ambient_stream: false
+  enable_curiosity_driven: false
+  enable_exif_prior: false
+  enable_focal_stream: false
+  enhanced_curiosity:
+    dropout: 0.1
+    enable: true
+    exploration_history_size: 1000
+    geometric_weight: 0.3
+    hidden_dim: 256
+    hierarchical_levels: 3
+    local_weight: 0.7
+    num_heads: 8
+  exif_config:
+    enable_prior_fusion: true
+    exif_embedding_dim: 64
+    fusion_method: adaptive_weighted
+    num_cameras: 71
+    prior_weight: 0.2
+  focal_config:
+    adaptive_focus: true
+    focus_strength: 0.1
+    num_iterations: 2
+  freeze_backbone: false
+  load_checkpoint: checkpoints/full_cognition_train_best.pth
+  lora_rank: 16
+  use_lora: false
+training:
+  accumulation_steps: 4
+  batch_size: 128
+  checkpoint_dir: evaluation_results\eval_models\baseline_dinov2
+  early_stopping:
+    min_delta: 0.001
+    monitor: val_loss
+    patience: 15
+    restore_best_weights: true
+  epochs: 80
+  final_weight_decay: 0.001
+  grad_clip_type: adaptive
+  grad_clip_value: 2.0
+  huber_delta: 1.0
+  label_smoothing: 0.0
+  learning_rate: 0.001
+  loss_type: smooth_l1
+  lr_patience: 8
+  optimizer: AdamW
+  save_every: 5
+  scheduler: warmup_cosine
+  smooth_l1_beta: 1.0
+  use_amsgrad: true
+  use_weight_decay_schedule: true
+  validate_every: 3
+  weight_decay: 0.01
+  weight_decay_schedule_type: cosine
+validation:
+  frequency: 3
+  metrics:
+  - rmse
+  - mae
+  - abs_rel
+  - sq_rel
+  - log10
+  - delta1
+  - delta2
+  - delta3
+  save_predictions: true

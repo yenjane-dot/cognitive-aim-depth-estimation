@@ -1,0 +1,270 @@
+# Cognitive-Aim Model Training Configuration (Experiment B)
+# Objective: Precise depth estimation + Target focusing + Environmental adaptation
+description: "Cognitive-Aim model training (precise depth estimation + target focusing + cognitive awareness)"
+
+model:
+  # load_checkpoint: "checkpoints/precision_enhanced_train_best.pth"  # Commented out resume training config
+  resume_checkpoint: false   # Train from scratch
+  backbone: "dinov2"
+  backbone_size: "base"
+  use_lora: true
+  lora_rank: 16
+  cognitive_modules:
+    - "ambient_stream"          # Ambient awareness stream - environmental assessment and background analysis
+    - "iterative_focal_stream"  # Target focusing stream - precise targeting and depth measurement
+    - "exif_prior_database"     # EXIF parameter database - environmental compensation and targeting experience
+    # Future extension layers (demonstrating architectural scalability):
+     # - "infrared_stream"        # Infrared data stream - thermal imaging targeting assistance
+     # - "radar_stream"           # Radar data stream - distance measurement assistance
+     # - "lidar_stream"           # LiDAR stream - precise distance perception
+     # Note: Currently focused on pure visual targeting, maintaining simplicity and robustness
+    # Openness: This architecture is designed to be modular, allowing easy addition of new layers without breaking core cognitive processes, demonstrating extensibility and flexibility for multimodal data.
+  freeze_backbone: false
+  
+  # Cognitive awareness driven attention configuration - target focusing optimization
+  curiosity_guided_attention:
+    enable: true
+    attention_heads: 8
+    attention_dropout: 0.05  # Reduce dropout to avoid over-regularization of attention weights leading to uniform distribution
+    
+  # Variational Bayesian cognitive awareness module configuration - target focusing oriented
+  enhanced_curiosity:
+    enable: true
+    hidden_dim: 256    # Fix dimension error: restore from 128 to 256, consistent with experiment A
+    num_heads: 8
+    dropout: 0.3     # Significantly increase dropout from 0.25 to 0.3, strengthen regularization
+    hierarchical_levels: 4  # Increase hierarchical curiosity layers
+    exploration_history_size: 1500  # Increase exploration history cache
+    
+    # Variational Bayesian architecture parameters
+    variational_architecture:
+      latent_dim_ratio: 4           # Latent space compression ratio
+      encoder_layers: ["768->384", "384->192"]  # Encoder layer configuration
+      decoder_layers: ["192->384", "384->192"]  # Decoder layer configuration
+      use_batch_norm: true          # Use batch normalization
+      activation: "relu"            # Activation function
+      
+    # Hierarchical weight configuration (focal stream priority version)
+    geometric_weight: 0.3   # Moderately increase geometric curiosity weight
+    local_weight: 0.9       # Maximize local curiosity weight (supporting focal stream)
+    variational_weight: 0.4 # Significantly increase variational Bayesian weight, enhance uncertainty estimation
+    focal_curiosity_boost: 5.0  # Significantly enhance focal stream curiosity boost factor
+    
+    # EXIF synergy enhancement - focal stream oriented
+    exif_geometric_synergy: 0.4  # Reduce EXIF and geometric curiosity synergy weight
+    exif_focal_synergy: 0.9      # Further enhance EXIF and focal stream synergy weight
+    variational_exif_fusion: true  # Enable variational-EXIF fusion
+    
+  # EXIF configuration enhancement - focal stream priority fusion
+  exif_config:
+    enable_prior_fusion: true
+    fusion_method: "focal_priority_weighted"  # Focal stream priority weighted fusion
+    exif_embedding_dim: 128  # Further increase EXIF embedding dimension (enhance representation capability)
+    prior_weight: 0.25      # Reduce EXIF weight, make way for focal stream
+    focal_stream_weight: 0.5  # Focal stream weight (newly added)
+    ambient_stream_weight: 0.25  # Global stream weight (reduced)
+    num_cameras: 71
+    # EXIF feature enhancement strategy
+    exif_feature_enhancement:
+      enable_geometric_encoding: true    # Enable geometric parameter encoding
+      enable_depth_prior_fusion: true   # Enable depth prior fusion
+      exif_attention_weight: 0.6        # EXIF attention weight
+      focal_priority_boost: 1.5          # Focal stream priority boost factor
+    
+  # Iterative focusing enhancement - focal stream priority architecture
+  focal_config:
+    num_iterations: 6       # Keep 6 iterations, focus on quality rather than quantity
+    focus_strength: 2.5     # Significantly enhance focusing strength, solve negative activation problem
+    adaptive_focus: true    # Enable adaptive focusing
+    activation_threshold: 0.0001  # Further reduce activation threshold
+    gradient_flow_enhancement: true  # Enhance gradient flow
+    focal_attention_weight: 2.0      # Significantly enhance focal attention weight
+    focal_dominance_factor: 3.0      # Increase focal stream dominance factor
+    iterative_amplification: 1.8     # Enhance iterative amplification coefficient
+
+dataset:
+  path: "dataset"
+  image_size: 224
+  augmentation: true
+
+# Variational Bayesian cognitive awareness configuration - target focusing optimization
+curiosity:
+  enable: true             # Enable variational Bayesian cognitive awareness mechanism
+  loss_type: "huber"       # Use Huber loss to improve robustness
+  lambda: 0.5              # Significantly increase cognitive awareness weight λ, enhance synergistic exploration with focal stream
+  warmup_epochs: 0         # Remove warmup period, immediately activate cognitive awareness
+  uncertainty_weight: 0.6  # Significantly increase uncertainty weight from 0.4 to 0.6, strengthen threat identification
+  
+  # Variational Bayesian specific parameters
+  variational_params:
+    kl_weight: 0.15        # Enhance KL divergence weight (control regularization strength)
+    latent_dim_ratio: 4    # Latent space dimension ratio (feature_dim // latent_dim_ratio)
+    beta_schedule: "cosine" # Dynamic KL weight scheduling strategy (constant/linear/cosine)
+    beta_start: 0.05       # Reduce KL weight start value
+    beta_end: 1.5          # Increase KL weight end value
+    reconstruction_weight: 1.2  # Increase reconstruction error weight
+    
+  # Hierarchical cognitive awareness configuration - variational Bayesian version
+  hierarchical:
+    enable: true
+    level_weights: [0.2, 0.7, 0.1]  # [environmental awareness, target focusing, variational inference] - maximize target focusing weight
+    adaptive_weighting: true
+    exif_guided_weighting: true  # Enable EXIF parameter guided weight adjustment
+    variational_integration: true  # Enable variational inference integration
+    
+  # Variational Bayesian statistics and visualization
+  statistics:
+    enable_logging: true
+    log_frequency: 50       # More frequent logging
+    save_attention_maps: true
+    exploration_analysis: true
+    # Variational Bayesian specific logging
+    variational_logging:
+      log_kl_divergence: true      # Log KL divergence
+      log_reconstruction_error: true # Log reconstruction error
+      log_latent_statistics: true   # Log latent space statistics
+      latent_visualization_frequency: 10  # Visualize latent space every 10 epochs
+      save_latent_distributions: true     # Save latent distribution plots
+
+training:
+  optimizer: "AdamW"
+  learning_rate: 0.00002      # Reduce learning rate, stabilize gradient norm
+  weight_decay: 0.015         # Enhance weight decay to control overfitting
+  epochs: 150              # Increase training epochs
+  batch_size: 128            # Significantly reduce batch size to improve precision
+  accumulation_steps: 4   # Significantly increase gradient accumulation
+  scheduler: "warmup_cosine"
+  warmup_epochs: 0         # Remove warmup mechanism, immediately use full learning rate
+  lr_patience: 10
+  
+  # Gradient optimization strategy - precision oriented
+  grad_clip_type: "norm"   # Change to standard gradient clipping to ensure stability
+  grad_clip_value: 1     # Further reduce clipping threshold to prevent gradient explosion
+  use_amsgrad: true
+  attention_entropy_weight: 0.01  # Attention entropy regularization weight, encourage attention concentration
+  spatial_attention_weight: 0.1  # Spatial attention loss weight, encourage central regions to get more attention
+  
+  # Loss function optimization - precision priority
+  loss_type: "huber"       # Use Huber loss
+  loss_scale_factor: 8.0   # Increase loss scaling factor, enhance gradient signal
+  smooth_l1_beta: 0.5      # Reduce smooth L1 parameter, focus more on small errors
+  huber_delta: 0.5         # Reduce Huber loss parameter, improve small error sensitivity
+  
+  # 高级正则化策略 - 加强过拟合控制
+  use_weight_decay_schedule: true
+  weight_decay_schedule_type: "cosine"
+  final_weight_decay: 0.005    # 大幅增加最终权重衰减，从0.001提升到0.005
+  label_smoothing: 0.08        # 增强标签平滑，从0.05提升到0.08
+  
+  # 早停机制配置 - 更严格的精度要求
+  early_stopping:
+    patience: 30             # 降低耐心值，更早停止过拟合
+    min_delta: 0.0001        # 提升改善阈值，更严格要求
+    monitor: "val_loss"
+    restore_best_weights: true
+  save_every: 3              # 更频繁的保存
+  validate_every: 2          # 更频繁的验证
+
+# 统一日志配置
+logging:
+  log_dir: "logs"
+  tensorboard: true
+  save_images: true
+  num_save_images: 12        # 保存更多图像
+  
+  # 战术警觉性相关日志 - 详细记录
+  curiosity:
+    log_curiosity_stats: true
+    log_attention_weights: true
+    log_exploration_history: true
+    save_curiosity_heatmaps: true
+    log_geometric_curiosity: true  # 新增环境感知日志
+    log_target_locking: true       # 新增目标锁定日志
+    log_distance_precision: true   # 新增距离精度日志
+    
+validation:
+  frequency: 2
+  metrics:
+    - "rmse"
+    - "mae"
+    - "abs_rel"
+    - "sq_rel"
+    - "log10"
+    - "delta1"
+    - "delta2"
+    - "delta3"
+    - "threshold_acc"         # 重点关注阈值准确率
+  save_predictions: true
+  detailed_analysis: true    # 启用详细分析
+  
+checkpoint:
+  save_dir: "checkpoints"
+  save_frequency: 3          # 更频繁的检查点保存
+  keep_last_n: 5            # 保留更多检查点
+  auto_resume: true
+  
+# 高级配置 - 架构优势体现
+advanced:
+  # 动态采样策略 - 启用困难样本采样
+  dynamic_sampling:
+    enable: true
+    difficulty_threshold: 0.6  # 降低阈值，更多困难样本
+    adaptive_sampling: true    # 自适应采样
+    
+  # 注意力可视化 - 体现架构优势
+  attention_visualization:
+    enable: true
+    save_frequency: 25         # 更频繁的可视化
+    save_iterative_attention: true  # 保存迭代注意力
+    
+  # 探索历史分析 - 好奇心机制分析
+  exploration_history:
+    enable: true
+    analysis_frequency: 50
+    save_statistics: true
+    detailed_curiosity_analysis: true
+    
+  # 架构优势分析
+  architecture_analysis:
+    enable: true
+    module_contribution_analysis: true  # 模块贡献分析
+    cognitive_flow_visualization: true  # 认知流程可视化
+    
+# 实验追踪
+experiment:
+  name: "marksman_aiming_precision"
+  tags: ["marksman_aiming", "target_locking", "distance_measurement", "tactical_alertness"]
+  notes: "射手瞄准学习机制 - 基于战术警觉性的精确目标锁定与距离测量"
+  version: "v4.0"
+  comparison_baseline: "precision_enhanced_train"  # 与精度增强实验对比
+  
+  # 射手瞄准实验特定配置
+  marksman_experiment:
+    compare_with_photography: true    # 与设备模式对比
+    ablation_studies:
+      - "without_tactical_alertness"   # 无战术警觉性消融
+      - "different_iteration_counts"   # 不同迭代次数消融
+      - "focus_strength_effects"       # 聚焦强度效果消融
+    performance_validation:
+      enable_precision_tracking: true   # 跟踪精度指标
+      log_target_locking: true         # 监控目标锁定
+      measure_distance_accuracy: true  # 测量距离精度
+
+# 射手瞄准特殊配置
+precision_optimization:
+  # 射手瞄准式精度增强
+  marksman_precision:
+    enable: true
+    target_accuracy_threshold: 0.05  # 5cm精度目标
+    iterative_refinement: true
+    geometric_consistency_weight: 0.4
+    distance_measurement_priority: true  # 优先距离测量
+    target_locking_enhancement: 1.5      # 目标锁定增强因子
+    
+  # 射手认知架构优势
+  cognitive_advantage:
+    multi_scale_fusion: true         # 多尺度特征融合
+    experience_guided_learning: true # 射击经验引导学习
+    tactical_alertness_exploration: true # 战术警觉性驱动探索
+    adaptive_attention_mechanism: true # 自适应注意力机制
+  

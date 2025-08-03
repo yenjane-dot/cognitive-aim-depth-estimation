@@ -1,0 +1,6 @@
+filename,depth_path,camera_model,focal_length,aperture,iso,depth_min,depth_max,scene_type,quality_score
+img_001.jpg,img_001_depth.png,Canon EOS R5,85.0,2.8,100,2.1,8.5,indoor,0.95
+img_002.jpg,img_002_depth.png,Nikon D850,50.0,1.8,200,1.8,12.3,outdoor,0.92
+img_003.jpg,img_003_depth.png,Sony A7R IV,35.0,2.0,160,1.5,15.2,indoor,0.88
+img_004.jpg,img_004_depth.png,Canon EOS 5D Mark IV,135.0,2.8,320,3.2,9.8,outdoor,0.91
+img_005.jpg,img_005_depth.png,Fujifilm X-T4,56.0,1.2,125,2.5,11.7,indoor,0.94
