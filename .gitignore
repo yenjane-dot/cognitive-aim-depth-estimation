@@ -40,7 +40,7 @@ venv.bak/
 .ipynb_checkpoints
 
 # PyTorch
-#*.pth
+*.pth
 *.pt
 *.ckpt
 
