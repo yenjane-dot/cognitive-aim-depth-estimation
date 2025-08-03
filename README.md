@@ -6,14 +6,21 @@ Monocular depth estimation model based on cognitive attention mechanism with gui
 
 ### 1. Download Pre-trained Model
 
-Download the pre-trained model file `cognitive_aim_model.pth` (568MB) from Baidu Netdisk:
+Download the pre-trained model file `cognitive_aim_model.pth` (568MB):
 
-**Link:** https://pan.baidu.com/s/1HyhNe58adaVp5OGpljheiQ?pwd=zcgc  
-**Extract Code:** `zcgc`
+**For Chinese Users (中国用户):**
+- **Baidu Netdisk:** https://pan.baidu.com/s/1HyhNe58adaVp5OGpljheiQ?pwd=zcgc  
+- **Extract Code:** `zcgc`
+
+**For International Users:**
+- Google Drive: [Coming Soon]
+- Hugging Face Hub: [Coming Soon]
+- *Note: If you cannot access Baidu Netdisk, please try using a VPN or contact the maintainer*
 
 Place the downloaded file in the `checkpoints/` directory:
 ```
 checkpoints/
+├── README.md
 └── cognitive_aim_model.pth
 ```
 
