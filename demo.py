@@ -174,21 +174,21 @@ class CognitiveAimInference:
             from PIL.ExifTags import TAGS
             import warnings
             
-            # 忽略PIL的EXIF警告
+            # Ignore PIL EXIF warnings
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 
                 image = Image.open(image_path)
                 
-                # 尝试获取EXIF数据，处理损坏的情况
+                # Try to get EXIF data, handle corrupted cases
                 try:
                     exif_data = image._getexif()
                 except Exception:
-                    # 如果_getexif()失败，尝试使用getexif()方法
+                    # If _getexif() fails, try using getexif() method
                     try:
                         exif_data = image.getexif()
                         if exif_data:
-                            # 转换为字典格式
+                            # Convert to dictionary format
                             exif_dict = {}
                             for tag_id, value in exif_data.items():
                                 exif_dict[tag_id] = value
@@ -199,11 +199,11 @@ class CognitiveAimInference:
                 if exif_data is None:
                     return None
                     
-                # 提取核心EXIF信息：焦距、光圈、曝光时间、ISO
+                # Extract core EXIF information: focal length, aperture, exposure time, ISO
                 extracted = {}
                 
                 def safe_extract_value(value):
-                    """安全提取EXIF值，处理分数格式"""
+                    """Safely extract EXIF value, handle fraction format"""
                     try:
                         if isinstance(value, tuple) and len(value) == 2:
                             return float(value[0]) / float(value[1])
@@ -220,22 +220,22 @@ class CognitiveAimInference:
                         
                         if tag == 'FocalLength':
                             focal_length = safe_extract_value(value)
-                            if focal_length and 10 <= focal_length <= 500:  # 合理范围检查
+                            if focal_length and 10 <= focal_length <= 500:  # Reasonable range check
                                 extracted['FocalLength'] = focal_length
                                 
                         elif tag == 'FNumber':
                             aperture = safe_extract_value(value)
-                            if aperture and 1.0 <= aperture <= 32.0:  # 合理范围检查
+                            if aperture and 1.0 <= aperture <= 32.0:  # Reasonable range check
                                 extracted['FNumber'] = aperture
                                 
                         elif tag == 'ExposureTime':
                             exposure = safe_extract_value(value)
-                            if exposure and 0.0001 <= exposure <= 30.0:  # 合理范围检查
+                            if exposure and 0.0001 <= exposure <= 30.0:  # Reasonable range check
                                 extracted['ExposureTime'] = exposure
                                 
                         elif tag == 'ISOSpeedRatings':
                             iso = safe_extract_value(value)
-                            if iso and 50 <= iso <= 25600:  # 合理范围检查
+                            if iso and 50 <= iso <= 25600:  # Reasonable range check
                                 extracted['ISOSpeedRatings'] = int(iso)
                                 
                         elif tag in ['Make', 'Model']:
@@ -243,23 +243,23 @@ class CognitiveAimInference:
                                 extracted[tag] = value.strip()
                                 
                     except Exception:
-                        # 忽略单个标签的提取错误，继续处理其他标签
+                        # Ignore single tag extraction errors, continue processing other tags
                         continue
                         
                 return extracted if extracted else None
                 
         except Exception as e:
-            # 只在完全无法读取时显示错误
+            # Only show error when completely unable to read
             if "Corrupt EXIF" not in str(e):
-                print(f"EXIF提取失败: {e}")
+                print(f"EXIF extraction failed: {e}")
             return None
             
     def _process_exif_for_model(self, exif_data: Optional[Dict]) -> Dict:
         """Process EXIF data for model input. Always returns valid data - uses defaults when EXIF is missing."""
         try:
-            # 如果有EXIF数据，优先使用真实值；如果没有，使用默认值
+            # If EXIF data is available, use real values; if not, use default values
             if exif_data is not None:
-                # 使用真实EXIF数据
+                # Use real EXIF data
                 processed = {
                     'focal_length': torch.tensor([exif_data.get('FocalLength', 50.0)], dtype=torch.float32),
                     'aperture': torch.tensor([exif_data.get('FNumber', 2.8)], dtype=torch.float32),
@@ -267,13 +267,13 @@ class CognitiveAimInference:
                     'camera_idx': torch.tensor([self.camera_to_id.get(exif_data.get('Model', 'unknown'), 0)], dtype=torch.long)
                 }
             else:
-                # 没有EXIF数据时，使用合理的默认值
+                # When no EXIF data is available, use reasonable default values
                 print("No EXIF data detected, using default camera parameters")
                 processed = {
-                    'focal_length': torch.tensor([50.0], dtype=torch.float32),  # 标准镜头焦距
-                    'aperture': torch.tensor([2.8], dtype=torch.float32),       # 常见光圈值
-                    'iso': torch.tensor([100], dtype=torch.float32),            # 低ISO值
-                    'camera_idx': torch.tensor([0], dtype=torch.long)           # 默认相机索引
+                    'focal_length': torch.tensor([50.0], dtype=torch.float32),  # Standard lens focal length
+                    'aperture': torch.tensor([2.8], dtype=torch.float32),       # Common aperture value
+                    'iso': torch.tensor([100], dtype=torch.float32),            # Low ISO value
+                    'camera_idx': torch.tensor([0], dtype=torch.long)           # Default camera index
                 }
             
             # Move to device
@@ -284,7 +284,7 @@ class CognitiveAimInference:
             
         except Exception as e:
             print(f"EXIF processing failed, using default values: {e}")
-            # 异常情况下也返回默认值
+            # Return default values even in exception cases
             processed = {
                 'focal_length': torch.tensor([50.0], dtype=torch.float32),
                 'aperture': torch.tensor([2.8], dtype=torch.float32),
@@ -330,7 +330,7 @@ class CognitiveAimInference:
         else:
             print("No EXIF data detected, using default parameters: focal_length=50.0, aperture=2.8, ISO=100")
             
-        # 清除之前的注意力权重
+        # Clear previous attention weights
         if hasattr(self.model, '_last_attention_weights'):
             delattr(self.model, '_last_attention_weights')
         
@@ -358,7 +358,7 @@ class CognitiveAimInference:
                 print(f"Depth prediction: {depth_value:.4f}")
                 print(f"Confidence: {confidence_score:.4f}")
                 
-                # 生成prediction图像（包含注意力热力图和置信度可视化）
+                # Generate prediction image (including attention heatmap and confidence visualization)
                 attention_weights = None
                 if hasattr(self.model, 'get_attention_weights'):
                     try:
@@ -372,8 +372,8 @@ class CognitiveAimInference:
                     'image_path': image_path,
                     'original_size': original_size,
                     'processed_size': tuple(image_tensor.shape[2:]),
-                    'exif_available': exif_raw is not None,  # 基于原始EXIF数据是否存在
-                    'exif_source': 'real' if exif_raw is not None else 'default',  # 标记EXIF数据来源
+                    'exif_available': exif_raw is not None,  # Based on whether original EXIF data exists
+                    'exif_source': 'real' if exif_raw is not None else 'default',  # Mark EXIF data source
                     'instruction': instruction,
                     'cognitive_modules': self.config.get('cognitive_modules', []),
                     'model_status': {
@@ -386,7 +386,7 @@ class CognitiveAimInference:
                 if exif_raw:
                     metadata['exif_data'] = exif_raw
                 else:
-                    # 记录使用的默认值
+                    # Record the default values used
                     metadata['exif_data'] = {
                         'FocalLength': 50.0,
                         'FNumber': 2.8,
@@ -469,15 +469,15 @@ class CognitiveAimInference:
         print(f"Results saved to: {output_path}")
     
     def _save_prediction_image(self, image_path: str, image_tensor: torch.Tensor, depth_value: float, confidence_score: float, attention_weights: Optional[torch.Tensor] = None, instruction: Optional[str] = None):
-        """生成并保存prediction图像"""
+        """Generate and save prediction image"""
         import matplotlib.pyplot as plt
         from pathlib import Path
         
-        # 创建输出目录
+        # Create output directory
         output_dir = Path('demo_results')
         output_dir.mkdir(exist_ok=True)
         
-        # 生成输出文件名
+        # Generate output filename
         image_name = Path(image_path).stem
         if instruction:
             output_name = f"{image_name}_{instruction}_prediction.png"
@@ -485,7 +485,7 @@ class CognitiveAimInference:
             output_name = f"{image_name}_prediction.png"
         output_path = output_dir / output_name
         
-        # 反归一化图像
+        # Denormalize image
         device = image_tensor.device
         mean = torch.tensor([0.485, 0.456, 0.406], device=device).view(3, 1, 1)
         std = torch.tensor([0.229, 0.224, 0.225], device=device).view(3, 1, 1)
@@ -493,93 +493,93 @@ class CognitiveAimInference:
         image_denorm = torch.clamp(image_denorm, 0, 1)
         image_np = image_denorm.permute(1, 2, 0).cpu().numpy()
         
-        # 创建三列布局
+        # Create three-column layout
         fig, axes = plt.subplots(1, 3, figsize=(18, 6))
         
-        # 第一列：显示原图
+        # First column: display original image
         axes[0].imshow(image_np)
         axes[0].set_title('Original Image', fontsize=14, fontweight='bold')
         axes[0].axis('off')
         
-        # 第二列：显示注意力热力图叠加在原图上
+        # Second column: display attention heatmap overlaid on original image
         if attention_weights is not None:
-            # 处理注意力权重，确保正确提取空间信息
+            # Process attention weights, ensure correct spatial information extraction
             if attention_weights.dim() == 3:  # [batch, num_patches, dim]
-                attn_map = attention_weights[0]  # 取第一个batch
+                attn_map = attention_weights[0]  # Take first batch
                 if attn_map.shape[-1] > 1:
-                    # 如果有多个维度，取平均值而不是只取第一个维度
-                    attn_map = attn_map.mean(dim=-1)  # 对最后一个维度求平均
+                    # If multiple dimensions, take average instead of just first dimension
+                    attn_map = attn_map.mean(dim=-1)  # Average over last dimension
                 else:
-                    attn_map = attn_map.squeeze(-1)  # 移除最后一个维度
-            elif attention_weights.dim() == 2:  # [batch, num_patches] 或 [num_patches, dim]
+                    attn_map = attn_map.squeeze(-1)  # Remove last dimension
+            elif attention_weights.dim() == 2:  # [batch, num_patches] or [num_patches, dim]
                 if attention_weights.shape[0] == 1:  # [1, num_patches]
                     attn_map = attention_weights[0]
-                else:  # [num_patches, dim] - 这种情况下取平均值
+                else:  # [num_patches, dim] - take average in this case
                     if attention_weights.shape[1] > 1:
-                        attn_map = attention_weights.mean(dim=-1)  # 对最后一个维度求平均
+                        attn_map = attention_weights.mean(dim=-1)  # Average over last dimension
                     else:
                         attn_map = attention_weights.squeeze(-1)
             else:  # 1D tensor
                 attn_map = attention_weights
             
-            # 确保是1D tensor
+            # Ensure it's a 1D tensor
             if attn_map.dim() > 1:
                 attn_map = attn_map.flatten()
             
-            # 增强对比度，突出聚焦区域
+            # Enhance contrast, highlight focus regions
             attn_map = attn_map.cpu().numpy()
             
-            # 使用更强的非线性变换增强对比度
-            attn_map = np.power(attn_map, 3)  # 立方变换，更强地突出高值区域
+            # Use stronger nonlinear transformation to enhance contrast
+            attn_map = np.power(attn_map, 3)  # Cubic transformation, stronger highlighting of high-value regions
             
-            # 应用阈值处理，进一步增强对比度
-            threshold = np.percentile(attn_map, 70)  # 取70%分位数作为阈值
-            attn_map = np.where(attn_map > threshold, attn_map, attn_map * 0.3)  # 低于阈值的值减弱
+            # Apply threshold processing to further enhance contrast
+            threshold = np.percentile(attn_map, 70)  # Use 70th percentile as threshold
+            attn_map = np.where(attn_map > threshold, attn_map, attn_map * 0.3)  # Weaken values below threshold
             
-            # 重新归一化
+            # Re-normalize
             attn_map = (attn_map - attn_map.min()) / (attn_map.max() - attn_map.min() + 1e-8)
             
-            # 重塑为正方形网格
+            # Reshape to square grid
             num_patches = len(attn_map)
             patch_size = int(np.sqrt(num_patches))
             if patch_size * patch_size == num_patches:
                 attn_map_2d = attn_map.reshape(patch_size, patch_size)
             else:
-                # 如果不是完全平方数，填充到最接近的正方形
+                # If not a perfect square, pad to nearest square
                 target_size = int(np.ceil(np.sqrt(num_patches)))
                 padded_map = np.zeros(target_size * target_size)
                 padded_map[:num_patches] = attn_map
                 attn_map_2d = padded_map.reshape(target_size, target_size)
             
-            # 先显示原图作为底图
+            # First display original image as base
             axes[1].imshow(image_np)
             
-            # 将注意力热力图调整到与原图相同尺寸
+            # Resize attention heatmap to match original image size
             h, w = image_np.shape[:2]
-            # 计算缩放比例
+            # Calculate scaling ratios
             scale_h = h / attn_map_2d.shape[0]
             scale_w = w / attn_map_2d.shape[1]
-            # 使用双线性插值调整热力图尺寸
+            # Use bilinear interpolation to resize heatmap
             attn_resized = zoom(attn_map_2d, (scale_h, scale_w), order=1)
             
-            # 叠加热力图，使用透明度
+            # Overlay heatmap with transparency
             im = axes[1].imshow(attn_resized, cmap='plasma', alpha=0.6, interpolation='bilinear', vmin=0, vmax=1)
             axes[1].set_title('Focus Map (Overlay)', fontsize=14, fontweight='bold')
             axes[1].axis('off')
             
-            # 添加颜色条
+            # Add colorbar
             cbar = plt.colorbar(im, ax=axes[1], fraction=0.046, pad=0.04)
             cbar.set_label('Attention Weight', rotation=270, labelpad=15)
         else:
-            # 如果没有注意力权重，显示原图
+            # If no attention weights, display original image
             axes[1].imshow(image_np)
             axes[1].set_title('No Attention Data', fontsize=14)
             axes[1].axis('off')
         
-        # 第三列：深度估计数值区
+        # Third column: depth estimation values section
         result_ax = axes[2]
         
-        # 显示深度预测和置信度数据
+        # Display depth prediction and confidence data
         result_ax.text(0.5, 0.7, f'Predicted Depth: {depth_value:.4f}m', 
                       horizontalalignment='center', verticalalignment='center',
                       transform=result_ax.transAxes, fontsize=16, fontweight='bold')
@@ -631,7 +631,7 @@ def main():
     if args.image:
         # Single image inference
         print(f"\nSingle image inference mode")
-        # 如果没有提供指令，默认使用'center'
+        # If no instruction provided, default to 'center'
         instruction = args.instruction if args.instruction else 'center'
         result = inference_engine.predict(args.image, instruction)
         results = [result]
@@ -683,7 +683,7 @@ def main():
             print(f"Average depth: {np.mean(depths):.4f}")
             print(f"Average confidence: {np.mean(confidences):.4f}")
     
-    # JSON结果生成功能已移除 - 根据用户要求只生成prediction图像
+    # JSON result generation feature removed - only generate prediction images per user request
     # inference_engine.save_results(results, args.output)
     
     print(f"\nInference completed!")

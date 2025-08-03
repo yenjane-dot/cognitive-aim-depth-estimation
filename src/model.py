@@ -1,6 +1,6 @@
 """
-Cognitive-Aim 核心模型
-基于认知科学的单目深度估计模型
+Cognitive-Aim Core Model
+Monocular depth estimation model based on cognitive science
 """
 
 import torch
@@ -11,7 +11,7 @@ import math
 import traceback
 
 class LoRALayer(nn.Module):
-    """LoRA (Low-Rank Adaptation) 层"""
+    """LoRA (Low-Rank Adaptation) Layer"""
     
     def __init__(self, in_features, out_features, rank=16, alpha=16):
         super().__init__()
@@ -19,18 +19,18 @@ class LoRALayer(nn.Module):
         self.alpha = alpha
         self.scaling = alpha / rank
         
-        # LoRA权重
+        # LoRA weights
         self.lora_A = nn.Parameter(torch.randn(rank, in_features) * 0.01)
         self.lora_B = nn.Parameter(torch.zeros(out_features, rank))
     
 
     def forward(self, x):
-        # 简化实现，不再依赖camera_indices和is_hard_sample变量
-        # 直接应用线性变换
+        # Simplified implementation, no longer depends on camera_indices and is_hard_sample variables
+        # Directly apply linear transformation
         return self.lora_projection(x) * self.scaling
 
 class AmbientStream(nn.Module):
-    """全局感知流 - 处理整体场景信息"""
+    """Ambient awareness stream - processes overall scene information"""
     
     def __init__(self, input_dim, hidden_dim=256):
         super().__init__()
@@ -46,14 +46,14 @@ class AmbientStream(nn.Module):
     def forward(self, cls_token):
         """
         Args:
-            cls_token: [batch_size, input_dim] - DINOv2的CLS token
+            cls_token: [batch_size, input_dim] - DINOv2 CLS token
         Returns:
-            ambient_features: [batch_size, hidden_dim//4] - 全局场景特征
+            ambient_features: [batch_size, hidden_dim//4] - Global scene features
         """
         return self.mlp(cls_token)
 
 class FocalStream(nn.Module):
-    """焦点瞄准流 - 注意力机制选择关键区域（集成好奇心驱动）"""
+    """Focal targeting stream - attention mechanism selects key regions (integrated curiosity-driven)"""
     
     def __init__(self, patch_dim, hidden_dim=256, num_heads=8, curiosity_guided=True, attention_dropout=0.1):
         super().__init__()

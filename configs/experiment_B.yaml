@@ -150,37 +150,37 @@ training:
   smooth_l1_beta: 0.5      # Reduce smooth L1 parameter, focus more on small errors
   huber_delta: 0.5         # Reduce Huber loss parameter, improve small error sensitivity
   
-  # 高级正则化策略 - 加强过拟合控制
+  # Advanced regularization strategy - strengthen overfitting control
   use_weight_decay_schedule: true
   weight_decay_schedule_type: "cosine"
-  final_weight_decay: 0.005    # 大幅增加最终权重衰减，从0.001提升到0.005
-  label_smoothing: 0.08        # 增强标签平滑，从0.05提升到0.08
+  final_weight_decay: 0.005    # Significantly increase final weight decay from 0.001 to 0.005
+  label_smoothing: 0.08        # Enhance label smoothing from 0.05 to 0.08
   
-  # 早停机制配置 - 更严格的精度要求
+  # Early stopping mechanism configuration - stricter precision requirements
   early_stopping:
-    patience: 30             # 降低耐心值，更早停止过拟合
-    min_delta: 0.0001        # 提升改善阈值，更严格要求
+    patience: 30             # Reduce patience value, stop overfitting earlier
+    min_delta: 0.0001        # Increase improvement threshold, stricter requirements
     monitor: "val_loss"
     restore_best_weights: true
-  save_every: 3              # 更频繁的保存
-  validate_every: 2          # 更频繁的验证
+  save_every: 3              # More frequent saving
+  validate_every: 2          # More frequent validation
 
-# 统一日志配置
+# Unified logging configuration
 logging:
   log_dir: "logs"
   tensorboard: true
   save_images: true
-  num_save_images: 12        # 保存更多图像
+  num_save_images: 12        # Save more images
   
-  # 战术警觉性相关日志 - 详细记录
+  # Cognitive awareness related logging - detailed recording
   curiosity:
     log_curiosity_stats: true
     log_attention_weights: true
     log_exploration_history: true
     save_curiosity_heatmaps: true
-    log_geometric_curiosity: true  # 新增环境感知日志
-    log_target_locking: true       # 新增目标锁定日志
-    log_distance_precision: true   # 新增距离精度日志
+    log_geometric_curiosity: true  # Add environmental awareness logging
+    log_target_locking: true       # Add target focusing logging
+    log_distance_precision: true   # Add distance precision logging
     
 validation:
   frequency: 2
@@ -193,78 +193,79 @@ validation:
     - "delta1"
     - "delta2"
     - "delta3"
-    - "threshold_acc"         # 重点关注阈值准确率
+    - "threshold_acc"         # Focus on threshold accuracy
   save_predictions: true
-  detailed_analysis: true    # 启用详细分析
+  detailed_analysis: true    # Enable detailed analysis
   
 checkpoint:
   save_dir: "checkpoints"
-  save_frequency: 3          # 更频繁的检查点保存
-  keep_last_n: 5            # 保留更多检查点
+  save_frequency: 3          # More frequent checkpoint saving
+  keep_last_n: 5            # Keep more checkpoints
   auto_resume: true
   
-# 高级配置 - 架构优势体现
+# Advanced configuration - architectural advantages demonstration
 advanced:
-  # 动态采样策略 - 启用困难样本采样
+  # Dynamic sampling strategy - enable hard sample sampling
   dynamic_sampling:
     enable: true
-    difficulty_threshold: 0.6  # 降低阈值，更多困难样本
-    adaptive_sampling: true    # 自适应采样
+    difficulty_threshold: 0.6  # Lower threshold, more hard samples
+    adaptive_sampling: true    # Adaptive sampling
     
-  # 注意力可视化 - 体现架构优势
+  # Attention visualization - demonstrate architectural advantages
   attention_visualization:
     enable: true
-    save_frequency: 25         # 更频繁的可视化
-    save_iterative_attention: true  # 保存迭代注意力
+    save_frequency: 25         # More frequent visualization
+    save_iterative_attention: true  # Save iterative attention
     
-  # 探索历史分析 - 好奇心机制分析
+  # Exploration history analysis - curiosity mechanism analysis
   exploration_history:
     enable: true
     analysis_frequency: 50
     save_statistics: true
     detailed_curiosity_analysis: true
     
-  # 架构优势分析
+  # Architectural advantage analysis
   architecture_analysis:
     enable: true
-    module_contribution_analysis: true  # 模块贡献分析
-    cognitive_flow_visualization: true  # 认知流程可视化
+    module_contribution_analysis: true  # Module contribution analysis
+    cognitive_flow_visualization: true  # Cognitive flow visualization
     
-# 实验追踪
+# Experiment tracking
 experiment:
-  name: "marksman_aiming_precision"
-  tags: ["marksman_aiming", "target_locking", "distance_measurement", "tactical_alertness"]
-  notes: "射手瞄准学习机制 - 基于战术警觉性的精确目标锁定与距离测量"
+  name: "cognitive_aim_precision"
+  tags: ["cognitive_aim", "target_focusing", "depth_estimation", "cognitive_awareness"]
+  notes: "Cognitive-Aim learning mechanism - precise target focusing and depth estimation based on cognitive awareness"
   version: "v4.0"
-  comparison_baseline: "precision_enhanced_train"  # 与精度增强实验对比
+  comparison_baseline: "precision_enhanced_train"  # Compare with precision enhancement experiment
   
-  # 射手瞄准实验特定配置
-  marksman_experiment:
-    compare_with_photography: true    # 与设备模式对比
+  # Cognitive-Aim experiment specific configuration
+  cognitive_experiment:
+    compare_with_photography: true    # Compare with device mode
     ablation_studies:
-      - "without_tactical_alertness"   # 无战术警觉性消融
-      - "different_iteration_counts"   # 不同迭代次数消融
-      - "focus_strength_effects"       # 聚焦强度效果消融
+      - "without_cognitive_awareness"   # Without cognitive awareness ablation
+      - "different_iteration_counts"   # Different iteration counts ablation
+      - "focus_strength_effects"       # Focus strength effects ablation
     performance_validation:
-      enable_precision_tracking: true   # 跟踪精度指标
-      log_target_locking: true         # 监控目标锁定
-      measure_distance_accuracy: true  # 测量距离精度
+      enable_precision_tracking: true   # Track precision metrics
+      log_target_focusing: true         # Monitor target focusing
+      measure_depth_accuracy: true  # Measure depth accuracy
 
-# 射手瞄准特殊配置
+# Cognitive-Aim special configuration
 precision_optimization:
-  # 射手瞄准式精度增强
-  marksman_precision:
+  # Cognitive-Aim precision enhancement
+  cognitive_precision:
     enable: true
-    target_accuracy_threshold: 0.05  # 5cm精度目标
+    target_accuracy_threshold: 0.05  # 5cm precision target
     iterative_refinement: true
     geometric_consistency_weight: 0.4
-    distance_measurement_priority: true  # 优先距离测量
-    target_locking_enhancement: 1.5      # 目标锁定增强因子
+    depth_estimation_priority: true  # Prioritize depth estimation
+    target_focusing_enhancement: 1.5      # Target focusing enhancement factor
     
-  # 射手认知架构优势
+  # Cognitive-Aim architectural advantages
   cognitive_advantage:
-    multi_scale_fusion: true         # 多尺度特征融合
-    experience_guided_learning: true # 射击经验引导学习
-    tactical_alertness_exploration: true # 战术警觉性驱动探索
-    adaptive_attention_mechanism: true # 自适应注意力机制
-  
+    multi_scale_fusion: true         # Multi-scale feature fusion
+    experience_guided_learning: true # Experience guided learning
+    cognitive_awareness_exploration: true # Cognitive awareness driven exploration
+    adaptive_attention_mechanism: true # Adaptive attention mechanism
+    environmental_adaptation: true    # Environmental adaptation capability
+    uncertainty_assessment: true          # Uncertainty assessment capability
