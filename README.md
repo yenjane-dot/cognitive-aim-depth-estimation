@@ -100,6 +100,16 @@ python train.py --config eval_configs/without_ambient_config.yaml
 python train.py --config eval_configs/without_exif_config.yaml
 ```
 
+## Visual Results
+
+### Spatial Guidance Effects
+
+The model supports 9 different spatial guidance instructions, demonstrating focused attention on different regions:
+
+![Nine-Grid Focus Guidance](figure3_nine_grid_focus.png)
+
+*Figure: Nine-grid spatial guidance effects showing how different instructions (center, left, right, top, bottom, top-left, top-right, bottom-left, bottom-right) guide the model's attention to specific regions of the image.*
+
 ## Core Features
 
 - **Cognitive Modules**: Ambient stream + Iterative focal stream + EXIF prior database
