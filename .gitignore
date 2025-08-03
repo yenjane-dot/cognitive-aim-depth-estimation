@@ -107,9 +107,9 @@ coverage.xml
 *.rar
 *.7z
 
-# Model checkpoints (uncomment if using Git LFS)
-# checkpoints/*.pth
-# checkpoints/*.pt
+# Model checkpoints
+checkpoints/*.pth
+checkpoints/*.pt
 
 # Wandb
 wandb/
