@@ -76,6 +76,8 @@ python demo.py --image 2.jpg --instruction top-left
 
 ### Training
 
+**Note: Please prepare your own training images (with or without EXIF information) before training.**
+
 ```bash
 # Train with default configuration
 python train.py --config configs/experiment_B.yaml
