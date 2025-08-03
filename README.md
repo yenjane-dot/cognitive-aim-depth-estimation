@@ -106,7 +106,7 @@ python train.py --config eval_configs/without_exif_config.yaml
 
 The model supports 9 different spatial guidance instructions, demonstrating focused attention on different regions:
 
-![Nine-Grid Spatial Guidance](figure3_nine_grid_spatial_guidance.png)
+![Nine-Grid Spatial Guidance](figure9_nine_grid_spatial_guidance.png)
 
 *Figure: Nine-grid spatial guidance effects showing how different instructions (top-left, top, top-right, left, center, right, bottom-left, bottom, bottom-right) guide the model's attention to specific regions of the image.*
 
